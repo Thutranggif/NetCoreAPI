@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Hồ sơ năng lực của Thu Trang</h2>
+<p>Mình là sinh viên năm cuối. Nhấn vào nút bên dưới để thu gọn danh sách kỹ năng của mình:</p>
+
+<button onclick="myFunction()">Hide elements</button>
+
+<h2 class="city">Đồ án tốt nghiệp</h2>
+<p>Hiện tại mình đang xây dựng ứng dụng quản lý học tập sử dụng React và Node.js.</p>
+
+<h2 class="city">Mục tiêu nghề nghiệp</h2>
+<p>Trở thành một lập trình viên Front-end chuyên nghiệp trong vòng 2 năm tới.</p>
+
+<h2 class="city">Mã sinh viên</h2>
+<p>2221050805</p>
+
+<script>
+function myFunction() {
+  var x = document.getElementsByClassName("city");
+  for (var i = 0; i < x.length; i++) {
+    x[i].style.display = "none";
+  }
+}
+</script>
+
+</body>
+</html>

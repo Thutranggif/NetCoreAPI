@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>Thông tin giới thiệu bản thân</h1>
+
+<p>Vui lòng điền thông tin của bạn vào các ô dưới đây để làm quen nhé.</p>
+
+<form action="/action_page.php" id="form1">
+  <label for="fname">First name:</label>
+  <input type="text" id="fname" name="fname"><br><br>
+  <input type="submit" value="Submit">
+</form>
+
+<p>Ô "Tên" dưới đây nằm ngoài thẻ form nhưng vẫn liên kết với form chính nhờ thuộc tính "form".</p>
+
+<label for="lname">Last name:</label>
+<input type="text" id="lname" name="lname" form="form1">
+
+</body>
+</html>
