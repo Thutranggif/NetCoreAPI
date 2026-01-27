@@ -1,0 +1,29 @@
+@{
+    ViewData["Title"] = "Buổi 4 - ViewBag & Form";
+}
+
+<h2>Bài thực hành số 4</h2>
+
+<div class="alert alert-info">
+    <p><strong>Thông báo:</strong> @ViewBag.ThongBao</p>
+    <p><strong>27/01/2026:</strong> @ViewBag.NgayHoc</p>
+</div>
+
+<hr />
+
+<h3>Gửi dữ liệu lên Controller</h3>
+<form action="/Buoi4/Index" method="post">
+    <div class="form-group">
+        <label>Tên sinh viên-Nguyễn Hà Vy:</label>
+        <input type="text" name="hoTen" class="form-control" placeholder="Ví dụ: Nguyễn Văn A" />
+    </div>
+    <br/>
+    <button type="submit" class="btn btn-primary">Gửi thông tin</button>
+</form>
+
+@if (ViewBag.LoiChao != null)
+{
+    <div class="alert alert-success mt-3">
+        <strong>Kết quả:</strong> @ViewBag.LoiChao
+    </div>
+}
