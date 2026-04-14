@@ -11,5 +11,9 @@ namespace DemoMVC.Data
         }
         public DbSet<Student> Students { get; set; }
         public DbSet<Faculty> Faculties { get; set; }
+        public DbSet<ChiTietDonHang> ChiTietDonHangs { get; set;}
+        public DbSet<KhachHang> KhachHangs { get; set;}
+        public DbSet<DonHang> DonHangs { get; set;}
+        public DbSet<SanPham> SanPhams { get; set;}
     }
 }

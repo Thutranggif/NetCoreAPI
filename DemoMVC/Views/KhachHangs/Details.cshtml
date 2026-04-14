@@ -1,0 +1,72 @@
+@model DemoMVC.Models.Entities.KhachHang
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1> Chi tiết khách hàng</h1>
+
+<div>
+    <h4>KhachHang</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.TenKhachHang)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.TenKhachHang)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.SoDienThoai)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.SoDienThoai)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.MaKhachHang">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
+<hr />
+<h4>Lịch sử đơn hàng</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Mã đơn hàng</th>
+            <th>Ngày đặt</th>
+            <th>Sản phẩm đã mua</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.DonHangs!= null && Model.DonHangs.Any())
+        {
+            @foreach (var item in Model.DonHangs)
+            {
+                <tr>
+                    <td>@item.MaDonHang</td>
+                    <td>@item.NgayDat.ToShortDateString()</td>
+                    <td>
+                        <ul>
+                            @if (item.ChiTietDonHangs != null)
+                            {
+                                @foreach (var ct in item.ChiTietDonHangs)
+                                {
+                                    <li>
+                                        @ct.SanPham?.TenSanPham (SL: @ct.SoLuong)
+                                    </li>
+                                }
+                            }
+                        </ul>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="3" class="text-center">Khách hàng này chưa có đơn hàng nào.</td>
+            </tr>
+        }
+    </tbody>
+</table>
