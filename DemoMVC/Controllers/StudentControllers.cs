@@ -1,39 +1,122 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using DemoMVC.Data; 
+using DemoMVC.Models.Entities; // Phải dùng Entities vì Student nằm ở đây
+using DemoMVC.Models;
+using System.Linq;
 
-namespace DemoWebMVC.Controllers
+namespace DemoMVC.Controllers
 {
-    public class Buoi4Controller : Controller
+    public class StudentController : Controller
     {
-        // ---------------------------------------------
-        // BÀI 1: TÌM HIỂU VỀ VIEWBAG
-        // ---------------------------------------------
+        private readonly ApplicationDbContext _context;
+
+        public StudentController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+        // --- 1. HIỂN THỊ DANH SÁCH (Dùng LINQ truy vấn View Model) ---
         public IActionResult Index()
         {
-            // Gửi dữ liệu từ Controller sang View
-            ViewBag.Message = "Xin chào, đây là thông báo từ ViewBag!";
-            ViewBag.HocVien = "Nguyễn Thị Thu Trang";
-            
-            return View(); 
+            // Sử dụng LINQ Method Syntax để kết nối bảng Student và Faculty
+            var data = _context.Students
+                .Include(s => s.Faculty) // Eager Loading: Tải dữ liệu khoa đi kèm
+                .Select(s => new StudentViewModel
+                {
+                    StudentCode = s.StudentCode,
+                    FullName = s.FullName,
+                    // Nếu Faculty null thì hiển thị "Chưa phân khoa"
+                    FacultyName = s.Faculty != null ? s.Faculty.FacultyName : "Chưa có khoa"
+                })
+                .ToList();
+
+            return View(data);
         }
 
-        // ---------------------------------------------
-        // BÀI 2: GỬI DỮ LIỆU TỪ VIEW -> CONTROLLER
-        // ---------------------------------------------
+        // --- 2. THÊM MỚI (Create) ---
+
+// Hàm này chỉ để mở trang nhập liệu (GET)
+public IActionResult Create()
+{
+    return View();
+}
+
+// Hàm này xử lý khi người dùng bấm nút "Lưu lại" (POST)
+[HttpPost]
+[ValidateAntiForgeryToken] // Thêm lớp bảo mật này vào
+public IActionResult Create(Student std) // std là đối tượng Student nhận từ Form
+{
+    // Bước kiểm tra quan trọng nhất của buổi học số 7
+    if (ModelState.IsValid)
+    {
+        // Nếu các luật [Required], [Range]... ở Model đều thỏa mãn:
+        _context.Students.Add(std);
+        _context.SaveChanges();
         
-        // Action này để hiển thị cái Form nhập liệu
-        public IActionResult GuiLoiChao()
-        {
-            return View();
-        }
-
-        // Action này để NHẬN dữ liệu khi bấm nút Gửi
-        [HttpPost]
-        public IActionResult GuiLoiChao(string hoTen) 
-        {
-            // Xử lý: Gửi thông báo kèm họ tên ngược lại View
-            ViewBag.LoiChao = "Xin chào " + hoTen;
-
-            return View();
-        }
+        // Lưu xong thì quay về trang danh sách (Index)
+        return RedirectToAction("Index");
     }
+
+    // Nếu dữ liệu vi phạm luật (ví dụ: FullName để trống)
+    // Trả lại View "Create" kèm theo đối tượng "std" để hiển thị lỗi ra màn hình
+    return View(std);
+}
+
+        // --- 3. CHỈNH SỬA (Edit) ---
+        // Đổi 'int id' thành 'string id' vì StudentCode là kiểu chuỗi
+        public IActionResult Edit(string id) 
+        {
+            if (id == null) return NotFound();
+            var std = _context.Students.Find(id);
+            if (std == null) return NotFound();
+            return View(std);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(Student std)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Students.Update(std);
+                _context.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return View(std);
+        }
+
+     // --- 4. XÓA (Delete) ---
+
+// Bước 1: Lấy thông tin sinh viên và hiển thị trang xác nhận (GET)
+[HttpGet]
+public IActionResult Delete(string id)
+{
+    if (id == null) return NotFound();
+
+    // Tìm sinh viên trong CSDL bằng khóa chính (StudentCode)
+    var std = _context.Students.Find(id);
+    
+    if (std == null) return NotFound();
+
+    // Trả về View Delete.cshtml cùng dữ liệu sinh viên đó
+    return View(std);
+}
+
+// Bước 2: Thực hiện xóa sau khi người dùng bấm nút "Xác nhận Xóa" (POST)
+[HttpPost, ActionName("Delete")]
+[ValidateAntiForgeryToken] // Bảo mật chống giả mạo request
+public IActionResult DeleteConfirmed(string id)
+{
+    var std = _context.Students.Find(id);
+    if (std != null)
+    {
+        _context.Students.Remove(std);
+        _context.SaveChanges();
+    }
+    
+    // Xóa xong quay về trang danh sách
+    return RedirectToAction(nameof(Index));
+}
+    }
+
 }
