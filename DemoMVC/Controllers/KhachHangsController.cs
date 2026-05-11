@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DemoMVC.Data;
 using DemoMVC.Models.Entities;
+using OfficeOpenXml;
+using System.IO;
 
 namespace DemoMVC.Controllers
 {
@@ -155,6 +157,52 @@ namespace DemoMVC.Controllers
         private bool KhachHangExists(string id)
         {
             return _context.KhachHangs.Any(e => e.MaKhachHang == id);
+        }
+        // POST: KhachHangs/ImportExcel
+        [HttpPost]
+        public async Task<IActionResult> ImportExcel(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            // Cấu hình bản quyền miễn phí cho EPPlus
+        
+
+            using (var stream = new MemoryStream())
+            {
+                // Copy file vào bộ nhớ
+                await file.CopyToAsync(stream);
+
+                using (var package = new ExcelPackage(stream))
+                {
+                    // Lấy Sheet đầu tiên trong file excel
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
+                    var rowCount = worksheet.Dimension.Rows;
+
+                    for (int row = 2; row <= rowCount; row++) // Bắt đầu từ dòng 2 để bỏ qua tiêu đề
+                    {
+                        var makh = worksheet.Cells[row, 1].Value?.ToString()?.Trim();
+                        
+                        // Kiểm tra dữ liệu trống hoặc đã tồn tại mã khách hàng chưa
+                        if (!string.IsNullOrEmpty(makh) && !KhachHangExists(makh))
+                        {
+                            var kh = new KhachHang
+                            {
+                                MaKhachHang = makh,
+                                TenKhachHang = worksheet.Cells[row, 2].Value?.ToString()?.Trim(),
+                                SoDienThoai = worksheet.Cells[row, 3].Value?.ToString()?.Trim()
+                            };
+                            _context.KhachHangs.Add(kh);
+                        }
+                    }
+                    // Lưu tất cả thay đổi vào CSDL
+                    await _context.SaveChangesAsync();
+                }
+            }
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

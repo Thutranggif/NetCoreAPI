@@ -28,7 +28,7 @@
                 @Html.DisplayFor(modelItem => item.NgayDat)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.KhachHang.MaKhachHang)
+                @Html.DisplayFor(modelItem => item.KhachHang!.MaKhachHang)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.MaDonHang">Edit</a> |
