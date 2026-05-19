@@ -370,3 +370,9 @@ E:\Net_Core_API\DemoMVC\obj\Debug\net10.0\refint\DemoMVC.dll
 E:\Net_Core_API\DemoMVC\obj\Debug\net10.0\DemoMVC.pdb
 E:\Net_Core_API\DemoMVC\obj\Debug\net10.0\DemoMVC.genruntimeconfig.cache
 E:\Net_Core_API\DemoMVC\obj\Debug\net10.0\ref\DemoMVC.dll
+E:\Net_Core_API\DemoMVC\obj\Debug\net10.0\compressed\w19mue5aa3-{0}-f1ylcx401p-f1ylcx401p.gz
+E:\Net_Core_API\DemoMVC\obj\Debug\net10.0\compressed\v5pmstia5p-{0}-cyufyooezn-cyufyooezn.gz
+E:\Net_Core_API\DemoMVC\obj\Debug\net10.0\compressed\uypbl6mosh-{0}-sxdgj04hx6-sxdgj04hx6.gz
+E:\Net_Core_API\DemoMVC\obj\Debug\net10.0\compressed\gymhzeah24-{0}-xkqvayhjsu-xkqvayhjsu.gz
+E:\Net_Core_API\DemoMVC\obj\Debug\net10.0\compressed\082pnrox9d-{0}-mxr4dwvji8-mxr4dwvji8.gz
+E:\Net_Core_API\DemoMVC\bin\Debug\net10.0\Bogus.dll
